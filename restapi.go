@@ -26,8 +26,12 @@ func sendRequest(method, url string, body interface{}, ApiKeyHeader string, ApiK
 	// Set headers
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", UserAgent)
-	req.Header.Set(ApiKeyHeader, ApiKey)
+	if UserAgent != "" {
+		req.Header.Set("User-Agent", UserAgent)
+	}
+	if ApiKeyHeader != "" || ApiKey != "" {
+		req.Header.Set(ApiKeyHeader, ApiKey)
+	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

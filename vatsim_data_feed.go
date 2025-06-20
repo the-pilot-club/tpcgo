@@ -100,8 +100,8 @@ type PreFile struct {
 	LastUpdate string      `json:"last_updated,omitempty"`
 }
 
-func GetVatsimDataFeed() (df *DataFeed, err error) {
-	data, err := sendRequest("GET", "https://data.vatsim.net/v3/vatsim-data.json", "", "", "", "")
+func GetVatsimDataFeed(UserAgent string) (df *DataFeed, err error) {
+	data, err := sendRequest("GET", "https://data.vatsim.net/v3/vatsim-data.json", "", "", "", UserAgent)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
 	}
