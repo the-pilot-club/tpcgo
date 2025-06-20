@@ -69,7 +69,7 @@ type Controller struct {
 	CID         int      `json:"cid,omitempty"`
 	Name        string   `json:"name,omitempty"`
 	Callsign    string   `json:"callsign,omitempty"`
-	Frequency   float64  `json:"frequency,omitempty"`
+	Frequency   string   `json:"frequency,omitempty"`
 	Facility    int      `json:"facility,omitempty"`
 	Rating      int      `json:"rating,omitempty"`
 	Server      string   `json:"server,omitempty"`
@@ -82,7 +82,7 @@ type ATIS struct {
 	CID         int      `json:"cid,omitempty"`
 	Name        string   `json:"name,omitempty"`
 	Callsign    string   `json:"callsign,omitempty"`
-	Frequency   float64  `json:"frequency,omitempty"`
+	Frequency   string   `json:"frequency,omitempty"`
 	Facility    int      `json:"facility,omitempty"`
 	Rating      int      `json:"rating,omitempty"`
 	ATISCode    string   `json:"atis_code,omitempty"`
