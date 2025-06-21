@@ -2,8 +2,10 @@ package tpcgo
 
 var (
 	VATSIMDataFeedVersion = "3"
+	VATSIMAPIVersion      = "2"
 
 	EndpointFCP        = "https://flightcrew.thepilotclub.org/api"
+	EndpointVATSIMAPI  = "https://api.vatsim.net/"
 	EndpointVATSIMData = "https://data.vatsim.net/"
 
 	// FCP API Endpoints
@@ -14,5 +16,8 @@ var (
 
 	//VASTSIM API Endpoints
 
-	EndpointVATSIMDataFeed = EndpointVATSIMData + "v" + VATSIMDataFeedVersion + "/vatsim-data.json"
+	EndpointVATSIMDataFeed  = EndpointVATSIMData + "v" + VATSIMDataFeedVersion + "/vatsim-data.json"
+	EndpointVATSIMDiscordId = func(userId string) string {
+		return EndpointVATSIMAPI + "v" + VATSIMAPIVersion + "/members/discord/" + userId
+	}
 )

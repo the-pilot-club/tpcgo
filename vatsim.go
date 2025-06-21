@@ -95,6 +95,11 @@ type PreFile struct {
 	LastUpdate string      `json:"last_updated,omitempty"`
 }
 
+type MemberDiscord struct {
+	ID        string `json:"id,omitempty"`
+	DiscordID string `json:"user_id,omitempty"`
+}
+
 func (v *VATSIMSession) GetVatsimDataFeed() (df *DataFeed, err error) {
 	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMDataFeed, "")
 	if err != nil {
@@ -105,4 +110,17 @@ func (v *VATSIMSession) GetVatsimDataFeed() (df *DataFeed, err error) {
 		return nil, err
 	}
 	return df, nil
+}
+
+func (v *VATSIMSession) GetUserDiscordID(UserID string) (m *MemberDiscord, err error) {
+
+	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMDiscordId(UserID), "")
+	if err != nil {
+		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&m)
+	if err != nil {
+		return nil, err
+	}
+	return m, err
 }
