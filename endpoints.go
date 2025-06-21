@@ -20,4 +20,7 @@ var (
 	EndpointVATSIMDiscordId = func(userId string) string {
 		return EndpointVATSIMAPI + "v" + VATSIMAPIVersion + "/members/discord/" + userId
 	}
+	EndpointVATSIMUserHours = func(userId string) string {
+		return EndpointVATSIMAPI + "v" + VATSIMAPIVersion + "/members/" + userId + "/stats"
+	}
 )

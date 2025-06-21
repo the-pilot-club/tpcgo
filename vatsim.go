@@ -100,6 +100,23 @@ type MemberDiscord struct {
 	DiscordID string `json:"user_id,omitempty"`
 }
 
+type VATSIMUserHours struct {
+	ID    int     `json:"id,omitempty"`
+	ATC   float64 `json:"atc,omitempty"`
+	Pilot float64 `json:"pilot,omitempty"`
+	S1    float64 `json:"s1,omitempty"`
+	S2    float64 `json:"s2,omitempty"`
+	S3    float64 `json:"s3,omitempty"`
+	C1    float64 `json:"c1,omitempty"`
+	C2    float64 `json:"c2,omitempty"`
+	C3    float64 `json:"c3,omitempty"`
+	I1    float64 `json:"i1,omitempty"`
+	I2    float64 `json:"i2,omitempty"`
+	I3    float64 `json:"i3,omitempty"`
+	SUP   float64 `json:"sup,omitempty"`
+	ADM   float64 `json:"adm,omitempty"`
+}
+
 func (v *VATSIMSession) GetVatsimDataFeed() (df *DataFeed, err error) {
 	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMDataFeed, "")
 	if err != nil {
@@ -113,8 +130,19 @@ func (v *VATSIMSession) GetVatsimDataFeed() (df *DataFeed, err error) {
 }
 
 func (v *VATSIMSession) GetUserDiscordID(UserID string) (m *MemberDiscord, err error) {
-
 	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMDiscordId(UserID), "")
+	if err != nil {
+		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&m)
+	if err != nil {
+		return nil, err
+	}
+	return m, err
+}
+
+func (v *VATSIMSession) GetUserHours(UserID string) (m *VATSIMUserHours, err error) {
+	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMUserHours(UserID), "")
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
 	}
