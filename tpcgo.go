@@ -13,7 +13,7 @@ func NewFCPSession(ApiKey string) (f *FCPSession, e error) {
 
 func NewVATSIMSession(ApiKey string) (v *VATSIMSession, e error) {
 	v = &VATSIMSession{
-		ApiKeyHeader: "X-API_KEY",
+		ApiKeyHeader: "X-API-KEY",
 		ApiKey:       ApiKey,
 		UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
 	}
