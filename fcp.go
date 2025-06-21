@@ -46,12 +46,10 @@ type FCPUserAircraft struct {
 	Name string `json:"aircraftName,omitempty"`
 }
 
-func GetFCPCallsign(UserId string, UserAgent string) (c *FCPCallsignResponse, e error) {
-
-	url := fmt.Sprintf("https://flightcrew.thepilotclub.org/api/users/find/%v/callsign", UserId)
-	data, err := sendRequest("GET", url, "", "", "", UserAgent)
+func (s FCPSession) GetFCPCallsign(UserId string) (c *FCPCallsignResponse, e error) {
+	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUserCallsign(UserId), "")
 	if err != nil {
-		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
+		return nil, fmt.Errorf("%s", err)
 	}
 	err = json.NewDecoder(data.Body).Decode(&c)
 	if err != nil {
@@ -61,11 +59,10 @@ func GetFCPCallsign(UserId string, UserAgent string) (c *FCPCallsignResponse, e 
 	return c, nil
 }
 
-func GetFCPUser(UserId string, UserAgent string) (u *FCPUser, e error) {
-	url := fmt.Sprintf("https://flightcrew.thepilotclub.org/api/users/find/%v", UserId)
-	data, err := sendRequest("GET", url, "", "", "", UserAgent)
+func (s FCPSession) GetFCPUser(UserId string) (u *FCPUser, e error) {
+	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUser(UserId), "")
 	if err != nil {
-		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
+		return nil, fmt.Errorf("%s", err)
 	}
 	err = json.NewDecoder(data.Body).Decode(&u)
 	if err != nil {
@@ -75,12 +72,13 @@ func GetFCPUser(UserId string, UserAgent string) (u *FCPUser, e error) {
 	return u, nil
 }
 
-func PostAuditLogEntry(UserId string, APIKeyHeader string, APIKey string, UserAgent string, entry AuditLogEntry) (a *AuditLogResponse, e error) {
-
-	url := fmt.Sprintf("https://flightcrew.thepilotclub.org/api/users/find/%v/audit-logs/new", UserId)
-	data, err := sendRequest("POST", url, entry, APIKeyHeader, APIKey, UserAgent)
+func (s FCPSession) PostAuditLogEntry(UserId string, entry AuditLogEntry) (a *AuditLogResponse, e error) {
+	if s.ApiKey == "" {
+		return nil, ErrNoKeyError
+	}
+	data, err := s.sendFCPRequest("POST", ENDPOINTFCPUserAuditLogAdd(UserId), entry)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
+		return nil, fmt.Errorf("%s", err)
 	}
 	err = json.NewDecoder(data.Body).Decode(&a)
 	if err != nil {

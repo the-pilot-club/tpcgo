@@ -2,12 +2,7 @@ package tpcgo
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-)
-
-var (
-	ErrJSONUnmarshal = errors.New("json unmarshal")
 )
 
 type DataFeed struct {
@@ -100,8 +95,8 @@ type PreFile struct {
 	LastUpdate string      `json:"last_updated,omitempty"`
 }
 
-func GetVatsimDataFeed(UserAgent string) (df *DataFeed, err error) {
-	data, err := sendRequest("GET", "https://data.vatsim.net/v3/vatsim-data.json", "", "", "", UserAgent)
+func (v *VATSIMSession) GetVatsimDataFeed() (df *DataFeed, err error) {
+	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMDataFeed, "")
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
 	}
