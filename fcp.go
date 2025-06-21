@@ -30,7 +30,7 @@ type FCPCallsignResponse struct {
 	Callsign int `json:"tpcCallsign,omitempty"`
 }
 
-type FCPUser struct {
+type FCPLimitedUser struct {
 	ID             string            `json:"id,omitempty"`
 	DiscordID      string            `json:"discordId,omitempty"`
 	Callsign       int               `json:"callsign,omitempty"`
@@ -46,6 +46,29 @@ type FCPUserAircraft struct {
 	Name string `json:"aircraftName,omitempty"`
 }
 
+type FCPFBOs struct {
+	FBO []FBO `json:"fbos,omitempty"`
+}
+type FCPSectors struct {
+	Sectors []Sectors `json:"sectors,omitempty"`
+}
+type FBO struct {
+	ICAO        string    `json:"icao,omitempty"`
+	Name        string    `json:"name,omitempty"`
+	Region      string    `json:"region,omitempty"`
+	Fuel        string    `json:"fuel,omitempty"`
+	Focus       string    `json:"focus,omitempty"`
+	PublicNotes string    `json:"publicNotes,omitempty"`
+	Sectors     []Sectors `json:"sectors,omitempty"`
+}
+
+type Sectors struct {
+	StartICAO    string `json:"startIcao,omitempty"`
+	EndICAO      string `json:"endIcao,omitempty"`
+	Size         string `json:"size,omitempty"`
+	SectorNumber int    `json:"sectorNumber,omitempty"`
+}
+
 func (s FCPSession) GetFCPCallsign(UserId string) (c *FCPCallsignResponse, e error) {
 	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUserCallsign(UserId), "")
 	if err != nil {
@@ -59,7 +82,19 @@ func (s FCPSession) GetFCPCallsign(UserId string) (c *FCPCallsignResponse, e err
 	return c, nil
 }
 
-func (s FCPSession) GetFCPUser(UserId string) (u *FCPUser, e error) {
+func (s FCPSession) GetAllFCPUsers() (u []*FCPLimitedUser, e error) {
+	data, err := s.sendFCPRequest("GET", ENDPOINTFCPGetAllUsers, "")
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&u)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
+func (s FCPSession) GetFCPUser(UserId string) (u *FCPLimitedUser, e error) {
 	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUser(UserId), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
@@ -86,4 +121,40 @@ func (s FCPSession) PostAuditLogEntry(UserId string, entry AuditLogEntry) (a *Au
 	}
 
 	return a, nil
+}
+
+func (s FCPSession) GetAllFBOs() (f *FCPFBOs, e error) {
+	data, err := s.sendFCPRequest("GET", EndPointFCPALLFBOs, "")
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&f)
+	if err != nil {
+		return nil, err
+	}
+	return f, nil
+}
+
+func (s FCPSession) GetFBO(Icao string) (f *FBO, e error) {
+	data, err := s.sendFCPRequest("GET", EndPointFCPFBO(Icao), "")
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&f)
+	if err != nil {
+		return nil, err
+	}
+	return f, nil
+}
+
+func (s FCPSession) GetSectors() (se *FCPSectors, e error) {
+	data, err := s.sendFCPRequest("GET", EndPointFCPSectors, "")
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&se)
+	if err != nil {
+		return nil, err
+	}
+	return se, nil
 }
