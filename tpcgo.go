@@ -2,11 +2,12 @@ package tpcgo
 
 const VERSION = "0.0.5"
 
-func NewFCPSession(ApiKey string) (f *FCPSession, e error) {
+func NewFCPSession(ApiKey string, Env string) (f *FCPSession, e error) {
 	f = &FCPSession{
 		ApiKeyHeader: "Authorization",
 		ApiKey:       ApiKey,
 		UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
+		Environment:  Env,
 	}
 	return
 }

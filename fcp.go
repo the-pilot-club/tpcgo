@@ -70,7 +70,7 @@ type Sectors struct {
 }
 
 func (s FCPSession) GetFCPCallsign(UserId string) (c *FCPCallsignResponse, e error) {
-	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUserCallsign(UserId), "")
+	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUserCallsign(UserId, s.Environment), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -83,7 +83,7 @@ func (s FCPSession) GetFCPCallsign(UserId string) (c *FCPCallsignResponse, e err
 }
 
 func (s FCPSession) GetAllFCPUsers() (u []*FCPLimitedUser, e error) {
-	data, err := s.sendFCPRequest("GET", ENDPOINTFCPGetAllUsers, "")
+	data, err := s.sendFCPRequest("GET", ENDPOINTFCPGetAllUsers(s.Environment), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -95,7 +95,7 @@ func (s FCPSession) GetAllFCPUsers() (u []*FCPLimitedUser, e error) {
 }
 
 func (s FCPSession) GetFCPUser(UserId string) (u *FCPLimitedUser, e error) {
-	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUser(UserId), "")
+	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUser(UserId, s.Environment), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -107,11 +107,23 @@ func (s FCPSession) GetFCPUser(UserId string) (u *FCPLimitedUser, e error) {
 	return u, nil
 }
 
+func (s FCPSession) GetFCPUsersBirthdays() (u []*string, e error) {
+	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUserBirthdays(s.Environment), "")
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&u)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
 func (s FCPSession) PostAuditLogEntry(UserId string, entry AuditLogEntry) (a *AuditLogResponse, e error) {
 	if s.ApiKey == "" {
 		return nil, ErrNoKeyError
 	}
-	data, err := s.sendFCPRequest("POST", ENDPOINTFCPUserAuditLogAdd(UserId), entry)
+	data, err := s.sendFCPRequest("POST", ENDPOINTFCPUserAuditLogAdd(UserId, s.Environment), entry)
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -124,7 +136,7 @@ func (s FCPSession) PostAuditLogEntry(UserId string, entry AuditLogEntry) (a *Au
 }
 
 func (s FCPSession) GetAllFBOs() (f *FCPFBOs, e error) {
-	data, err := s.sendFCPRequest("GET", EndPointFCPALLFBOs, "")
+	data, err := s.sendFCPRequest("GET", EndPointFCPALLFBOs(s.Environment), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -136,7 +148,7 @@ func (s FCPSession) GetAllFBOs() (f *FCPFBOs, e error) {
 }
 
 func (s FCPSession) GetFBO(Icao string) (f *FBO, e error) {
-	data, err := s.sendFCPRequest("GET", EndPointFCPFBO(Icao), "")
+	data, err := s.sendFCPRequest("GET", EndPointFCPFBO(Icao, s.Environment), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}
@@ -148,7 +160,7 @@ func (s FCPSession) GetFBO(Icao string) (f *FBO, e error) {
 }
 
 func (s FCPSession) GetSectors() (se *FCPSectors, e error) {
-	data, err := s.sendFCPRequest("GET", EndPointFCPSectors, "")
+	data, err := s.sendFCPRequest("GET", EndPointFCPSectors(s.Environment), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}

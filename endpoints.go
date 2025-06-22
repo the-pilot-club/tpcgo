@@ -4,27 +4,39 @@ var (
 	VATSIMDataFeedVersion = "3"
 	VATSIMAPIVersion      = "2"
 
-	EndpointFCP        = "https://flightcrew.thepilotclub.org/api"
+	EndpointFCP = func(Env string) string {
+		if Env == "production" {
+			return "https://flightcrew.thepilotclub.org/api"
+		} else if Env == "beta" {
+			return "https://flightcrew-beta.thepilotclub.org/api"
+		} else {
+			return ""
+		}
+	}
 	EndpointVATSIMAPI  = "https://api.vatsim.net/"
 	EndpointVATSIMData = "https://data.vatsim.net/"
 
 	// FCP API Endpoints
 
-	EndPointFCPALLFBOs = EndpointFCP + "/fbos"
-	EndPointFCPFBO     = func(icao string) string { return EndpointFCP + "/fbo/" + icao }
-	EndPointFCPSectors = EndpointFCP + "/sectors"
+	EndPointFCPALLFBOs = func(env string) string { return EndpointFCP(env) + "/fbos" }
+	EndPointFCPFBO     = func(icao string, env string) string { return EndpointFCP(env) + "/fbo/" + icao }
+	EndPointFCPSectors = func(env string) string { return EndpointFCP(env) + "/sectors" }
 
 	/*
 		FCP API  User Endpoints
 	*/
 
-	ENDPOINTFCPGetAllUsers     = EndpointFCP + "/users/get"
-	ENDPOINTFCPUser            = func(userId string) string { return EndpointFCP + "/users/find/" + userId }
-	ENDPOINTFCPUserBirthdays   = EndpointFCP + "/users/birthdays"
-	ENDPOINTFCPUserAdd         = EndpointFCP + "/users/new"
-	ENDPOINTFCPUserDelete      = func(userId string) string { return EndpointFCP + "/users/find/" + userId + "/delete" }
-	ENDPOINTFCPUserCallsign    = func(userId string) string { return EndpointFCP + "/users/find/" + userId + "/callsign" }
-	ENDPOINTFCPUserAuditLogAdd = func(userId string) string { return EndpointFCP + "/users/find/" + userId + "/audit-logs/new" }
+	ENDPOINTFCPGetAllUsers   = func(env string) string { return EndpointFCP(env) + "/users/get" }
+	ENDPOINTFCPUser          = func(userId string, env string) string { return EndpointFCP(env) + "/users/find/" + userId }
+	ENDPOINTFCPUserBirthdays = func(env string) string { return EndpointFCP(env) + "/users/birthdays" }
+	ENDPOINTFCPUserAdd       = func(env string) string { return EndpointFCP(env) + "/users/new" }
+	ENDPOINTFCPUserDelete    = func(userId string, env string) string { return EndpointFCP(env) + "/users/find/" + userId + "/delete" }
+	ENDPOINTFCPUserCallsign  = func(userId string, env string) string {
+		return EndpointFCP(env) + "/users/find/" + userId + "/callsign"
+	}
+	ENDPOINTFCPUserAuditLogAdd = func(userId string, env string) string {
+		return EndpointFCP(env) + "/users/find/" + userId + "/audit-logs/new"
+	}
 
 	/*
 		VASTSIM API Endpoints
