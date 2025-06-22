@@ -26,8 +26,28 @@ type AuditLogResponse struct {
 	Entry   AuditLogEntry `json:"entry,omitempty"`
 }
 
+type SuccessResponse struct {
+	Success string `json:"success,omitempty"`
+}
+
 type FCPCallsignResponse struct {
 	Callsign int `json:"tpcCallsign,omitempty"`
+}
+
+type FCPFullUser struct {
+	ID              string            `json:"id"`
+	DiscordID       string            `json:"discordId,omitempty"`
+	DiscordUsername string            `json:"discordUsername,omitempty"`
+	FirstName       string            `json:"firstName,omitempty"`
+	LastName        string            `json:"lastName,omitempty"`
+	Callsign        int               `json:"callsign,omitempty"`
+	VATSIMCid       int               `json:"vatsimCid,omitempty"`
+	Email           string            `json:"email,omitempty"`
+	HomeAirport     string            `json:"homeAirport,omitempty"`
+	ChartersCode    string            `json:"chartersCode,omitempty"`
+	Bio             string            `json:"bio,omitempty"`
+	Status          string            `json:"status,omitempty"`
+	AircraftHangar  []FCPUserAircraft `json:"aircraftHangar,omitempty"`
 }
 
 type FCPLimitedUser struct {
@@ -39,6 +59,10 @@ type FCPLimitedUser struct {
 	ChartersCode   string            `json:"chartersCode,omitempty"`
 	Bio            string            `json:"bio,omitempty"`
 	AircraftHangar []FCPUserAircraft `json:"aircraftHangar,omitempty"`
+}
+
+type FCPUserAdd struct {
+	UserID string `json:"id"`
 }
 
 type FCPUserAircraft struct {
@@ -105,6 +129,30 @@ func (s FCPSession) GetFCPUser(UserId string) (u *FCPLimitedUser, e error) {
 	}
 
 	return u, nil
+}
+
+func (s FCPSession) AddFCPUser(UserID *FCPUserAdd) (a *FCPFullUser, e error) {
+	data, err := s.sendFCPRequest("POST", ENDPOINTFCPUserAdd(s.Environment), UserID)
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&a)
+	if err != nil {
+		return nil, err
+	}
+	return a, nil
+}
+
+func (s FCPSession) DeleteFCPUser(UserID string) (su *SuccessResponse, e error) {
+	data, err := s.sendFCPRequest("DELETE", ENDPOINTFCPUserDelete(UserID, s.Environment), "")
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&su)
+	if err != nil {
+		return nil, err
+	}
+	return su, nil
 }
 
 func (s FCPSession) GetFCPUsersBirthdays() (u []*string, e error) {

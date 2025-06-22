@@ -10,11 +10,12 @@ import (
 )
 
 var (
-	ErrJSONUnmarshal = errors.New("json unmarshal")
-	ErrNoKeyError    = errors.New("no api key found")
-	ErrUnAuthorized  = errors.New("unauthorized")
-	ErrNotFound      = errors.New("resource not found")
-	ErrBadForm       = errors.New("invalid form")
+	ErrJSONUnmarshal   = errors.New("json unmarshal")
+	ErrNoKeyError      = errors.New("no api key found")
+	ErrUnAuthorized    = errors.New("unauthorized")
+	ErrNotFound        = errors.New("resource not found")
+	ErrBadForm         = errors.New("invalid form")
+	ErrAlreadyReported = errors.New("already reported")
 )
 
 func (v *VATSIMSession) sendVATSIMRequest(method, url string, body interface{}) (*http.Response, error) {
@@ -91,6 +92,8 @@ func (s FCPSession) sendFCPRequest(method, url string, body interface{}) (*http.
 		return nil, ErrNotFound
 	case http.StatusUnprocessableEntity:
 		return nil, ErrBadForm
+	case http.StatusAlreadyReported:
+		return nil, ErrAlreadyReported
 	}
 
 	if resp.StatusCode >= 400 {
