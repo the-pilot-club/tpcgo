@@ -20,3 +20,12 @@ func NewVATSIMSession(ApiKey string) (v *VATSIMSession, e error) {
 	}
 	return
 }
+
+func NewCoreAPISession(ApiKey string) (c *CoreAPISession, e error) {
+	c = &CoreAPISession{
+		ApiKeyHeader: "X-API-KEY",
+		ApiKey:       ApiKey,
+		UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
+	}
+	return
+}

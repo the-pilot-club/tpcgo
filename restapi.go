@@ -102,3 +102,54 @@ func (s FCPSession) sendFCPRequest(method, url string, body interface{}) (*http.
 
 	return resp, nil
 }
+
+func (s CoreAPISession) sendCoreAPIRequest(method, url string, body interface{}) (*http.Response, error) {
+	var bodyReader io.Reader
+	if body != nil {
+		jsonData, err := json.Marshal(body)
+		if err != nil {
+			return nil, err
+		}
+		bodyReader = bytes.NewBuffer(jsonData)
+	}
+
+	req, err := http.NewRequest(method, url, bodyReader)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set headers
+	if body != "" {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", s.UserAgent)
+	if s.ApiKey != "" {
+		req.Header.Set(s.ApiKeyHeader, s.ApiKey)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	switch resp.StatusCode {
+	case 200:
+	case 201:
+	case http.StatusUnauthorized:
+		return nil, ErrUnAuthorized
+	case http.StatusNotFound:
+		return nil, ErrNotFound
+	case http.StatusUnprocessableEntity:
+		return nil, ErrBadForm
+	case http.StatusAlreadyReported:
+		return nil, ErrAlreadyReported
+	}
+
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("request failed with status: %d", resp.StatusCode)
+	}
+
+	return resp, nil
+}

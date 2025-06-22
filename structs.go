@@ -7,6 +7,12 @@ type FCPSession struct {
 	Environment  string
 }
 
+type CoreAPISession struct {
+	ApiKeyHeader string
+	ApiKey       string
+	UserAgent    string
+}
+
 type VATSIMSession struct {
 	ApiKeyHeader string
 	ApiKey       string

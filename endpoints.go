@@ -13,6 +13,8 @@ var (
 			return ""
 		}
 	}
+	ENDPOINTCoreAPI = "https://api.thepilotclub.org"
+	//ENDPOINTCoreAPI    = "http://127.0.0.1:3000"
 	EndpointVATSIMAPI  = "https://api.vatsim.net/"
 	EndpointVATSIMData = "https://data.vatsim.net/"
 
@@ -37,6 +39,14 @@ var (
 	ENDPOINTFCPUserAuditLogAdd = func(userId string, env string) string {
 		return EndpointFCP(env) + "/users/find/" + userId + "/audit-logs/new"
 	}
+
+	/*
+		CORE API Endpoints
+	*/
+
+	ENDPOINTCoreAPIAllSuggestions = ENDPOINTCoreAPI + "/suggestions/all"
+	ENDPOINTCoreAPINewSuggestion  = ENDPOINTCoreAPI + "/suggestions/new"
+	ENDPOINTCoreAPISuggestion     = func(id string) string { return ENDPOINTCoreAPI + "/suggestions/" + id }
 
 	/*
 		VASTSIM API Endpoints
