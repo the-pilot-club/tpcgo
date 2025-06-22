@@ -132,6 +132,9 @@ func (s FCPSession) GetFCPUser(UserId string) (u *FCPLimitedUser, e error) {
 }
 
 func (s FCPSession) AddFCPUser(UserID *FCPUserAdd) (a *FCPFullUser, e error) {
+	if s.ApiKey == "" {
+		return nil, ErrNoKeyError
+	}
 	data, err := s.sendFCPRequest("POST", ENDPOINTFCPUserAdd(s.Environment), UserID)
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
@@ -144,6 +147,9 @@ func (s FCPSession) AddFCPUser(UserID *FCPUserAdd) (a *FCPFullUser, e error) {
 }
 
 func (s FCPSession) DeleteFCPUser(UserID string) (su *SuccessResponse, e error) {
+	if s.ApiKey == "" {
+		return nil, ErrNoKeyError
+	}
 	data, err := s.sendFCPRequest("DELETE", ENDPOINTFCPUserDelete(UserID, s.Environment), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
@@ -156,6 +162,9 @@ func (s FCPSession) DeleteFCPUser(UserID string) (su *SuccessResponse, e error) 
 }
 
 func (s FCPSession) GetFCPUsersBirthdays() (u []*string, e error) {
+	if s.ApiKey == "" {
+		return nil, ErrNoKeyError
+	}
 	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUserBirthdays(s.Environment), "")
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
