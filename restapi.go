@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// all errors that are present in the package
 var (
 	ErrJSONUnmarshal   = errors.New("json unmarshal")
 	ErrNoKeyError      = errors.New("no api key found")

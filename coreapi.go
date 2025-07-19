@@ -2,55 +2,7 @@ package tpcgo
 
 import (
 	"encoding/json"
-	"github.com/bwmarrin/discordgo"
 )
-
-type NewSuggestion struct {
-	StatusID  int    `json:"statusId"`
-	DiscordID string `json:"discordId"`
-	IdeaText  string `json:"ideaText"`
-}
-
-type Suggestions struct {
-	ID           string `json:"id,omitempty"`
-	StatsID      int    `json:"statsId,omitempty"`
-	DiscordId    string `json:"discordId,omitempty"`
-	IdeaText     string `json:"ideaText,omitempty"`
-	Reason       string `json:"reason,omitempty"`
-	MessageID    string `json:"messageId,omitempty"`
-	ChannelID    string `json:"channelId,omitempty"`
-	ActionUserID string `json:"actionUserId,omitempty"`
-}
-
-type QuizQuestion struct {
-	ID                string `json:"id,omitempty"`
-	Question          string `json:"question,omitempty"`
-	OptionA           string `json:"optionA,omitempty"`
-	OptionB           string `json:"optionB,omitempty"`
-	OptionC           string `json:"optionC,omitempty"`
-	CorrectAnswer     string `json:"correctAnswer,omitempty"`
-	AnswerDescription string `json:"answerDescription,omitempty"`
-	IsActive          bool   `json:"isActive,omitempty"`
-	IsOld             bool   `json:"isOld,omitempty"`
-	CreatedAt         string `json:"createdAt,omitempty"`
-	UpdatedAt         string `json:"updatedAt,omitempty"`
-}
-
-type QuizQuestionForResponse struct {
-	MessageID  string `json:"messageId,omitempty"`
-	QuestionID string `json:"questionId,omitempty"`
-}
-
-type QuizUserResponseSet struct {
-	MessageID string            `json:"messageId,omitempty"`
-	UserID    string            `json:"userId,omitempty"`
-	Answer    string            `json:"answer,omitempty"`
-	User      *discordgo.Member `json:"user,omitempty"`
-}
-
-type QuizUserResponse struct {
-	User *discordgo.Member `json:"user,omitempty"`
-}
 
 func (s *Session) GetAllSuggestions() (su []*Suggestions, e error) {
 	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIAllSuggestions, "")
