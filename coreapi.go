@@ -19,6 +19,20 @@ type Suggestions struct {
 	ActionUserID string `json:"actionUserId,omitempty"`
 }
 
+type QuizQuestion struct {
+	ID                string `json:"id,omitempty"`
+	Question          string `json:"question,omitempty"`
+	OptionA           string `json:"optionA,omitempty"`
+	OptionB           string `json:"optionB,omitempty"`
+	OptionC           string `json:"optionC,omitempty"`
+	CorrectAnswer     string `json:"correctAnswer,omitempty"`
+	AnswerDescription string `json:"answerDescription,omitempty"`
+	IsActive          bool   `json:"isActive,omitempty"`
+	IsOld             bool   `json:"isOld,omitempty"`
+	CreatedAt         string `json:"createdAt,omitempty"`
+	UpdatedAt         string `json:"updatedAt,omitempty"`
+}
+
 func (s *Session) GetAllSuggestions() (su []*Suggestions, e error) {
 	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIAllSuggestions, "")
 	if err != nil {
@@ -74,4 +88,88 @@ func (s *Session) DeleteSuggestion(id string) (d bool, e error) {
 	}
 	return true, nil
 
+}
+
+func (s *Session) GetAllQuizQuestions() (su []*QuizQuestion, e error) {
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIAllQuizQuestions, "")
+	if err != nil {
+		return nil, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&su)
+	if err != nil {
+		return nil, err
+	}
+	return su, nil
+}
+
+func (s *Session) GetCurrentQuizQuestions() (q *QuizQuestion, e error) {
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPICurrentQuizQuestion, "")
+	if err != nil {
+		return nil, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&q)
+	if err != nil {
+		return nil, err
+	}
+	return q, nil
+}
+
+func (s *Session) GetQuizQuestionByID(id string) (q *QuizQuestion, e error) {
+	data, err := s.sendCoreAPIRequest("GET", EndPointCoreAPIQuizQuestionByID(id), "")
+	if err != nil {
+		return nil, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&q)
+	if err != nil {
+		return nil, err
+	}
+	return q, nil
+}
+
+func (s *Session) GetNextQuizQuestion() (q *QuizQuestion, e error) {
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPINextQuizQuestion, "")
+	if err != nil {
+		return nil, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&q)
+	if err != nil {
+		return nil, err
+	}
+	return q, nil
+}
+
+func (s *Session) AddNewQuizQuestion(i QuizQuestion) (q *QuizQuestion, e error) {
+	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPINewQuizQuestion, i)
+	if err != nil {
+		return nil, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&q)
+	if err != nil {
+		return nil, err
+	}
+	return q, nil
+}
+
+func (s *Session) UpdateQuizQuestion(id string, i QuizQuestion) (q *QuizQuestion, e error) {
+	data, err := s.sendCoreAPIRequest("PUT", EndPointCoreAPIQuizQuestionByID(id), i)
+	if err != nil {
+		return nil, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&q)
+	if err != nil {
+		return nil, err
+	}
+	return q, nil
+}
+
+func (s *Session) DeleteQuizQuestion(id string) (d *QuizQuestion, e error) {
+	data, err := s.sendCoreAPIRequest("DELETE", EndPointCoreAPIQuizQuestionByID(id), "")
+	if err != nil {
+		return nil, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&d)
+	if err != nil {
+		return nil, err
+	}
+	return d, nil
 }
