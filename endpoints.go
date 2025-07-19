@@ -43,14 +43,23 @@ var (
 		CORE API Endpoints
 	*/
 
-	ENDPOINTCoreAPIAllSuggestions      = ENDPOINTCoreAPI + "/suggestions/all"
-	ENDPOINTCoreAPINewSuggestion       = ENDPOINTCoreAPI + "/suggestions/new"
-	ENDPOINTCoreAPISuggestion          = func(id string) string { return ENDPOINTCoreAPI + "/suggestions/" + id }
-	ENDPOINTCoreAPIAllQuizQuestions    = ENDPOINTCoreAPI + "/quiz/all"
-	ENDPOINTCoreAPINewQuizQuestion     = ENDPOINTCoreAPI + "/quiz/new"
-	ENDPOINTCoreAPINextQuizQuestion    = ENDPOINTCoreAPI + "/quiz/next"
-	ENDPOINTCoreAPICurrentQuizQuestion = ENDPOINTCoreAPI + "/quiz/current"
-	EndPointCoreAPIQuizQuestionByID    = func(id string) string { return ENDPOINTCoreAPI + "/quiz/" + id }
+	ENDPOINTCoreAPIAllSuggestions                = ENDPOINTCoreAPI + "/suggestions/all"
+	ENDPOINTCoreAPINewSuggestion                 = ENDPOINTCoreAPI + "/suggestions/new"
+	ENDPOINTCoreAPISuggestion                    = func(id string) string { return ENDPOINTCoreAPI + "/suggestions/" + id }
+	ENDPOINTCoreAPIAllQuizQuestions              = ENDPOINTCoreAPI + "/quiz/all"
+	ENDPOINTCoreAPINewQuizQuestion               = ENDPOINTCoreAPI + "/quiz/new"
+	ENDPOINTCoreAPINextQuizQuestion              = ENDPOINTCoreAPI + "/quiz/next"
+	ENDPOINTCoreAPICurrentQuizQuestion           = ENDPOINTCoreAPI + "/quiz/current"
+	EndPointCoreAPIQuizQuestionByID              = func(id string) string { return ENDPOINTCoreAPI + "/quiz/" + id }
+	ENDPOINTCoreAPIQuizSetQuestionForResponse    = ENDPOINTCoreAPI + "/quiz/responses/question/set"
+	ENDPOINTCoreAPIQuizSetUserResponse           = ENDPOINTCoreAPI + "/quiz/responses/user/record"
+	ENDPOINTCoreAPIQuizDeleteQuestionForResponse = func(id string) string { return ENDPOINTCoreAPI + "/quiz/responses/question/" + id }
+	ENDPOINTCoreAPIQuizGetResponses              = func(id string, answer string) string {
+		return ENDPOINTCoreAPI + "/quiz/responses/user/responses/" + id + "?answer=" + answer
+	}
+	ENDPOINTCoreAPIResetUserResponses = ENDPOINTCoreAPI + "/quiz/responses/user/responses"
+	ENDPOINTCoreAPICheckUserResponse  = func(id string) string { return ENDPOINTCoreAPI + "/quiz/responses/user/check/" + id }
+
 	/*
 		VATSIM API Endpoints
 	*/

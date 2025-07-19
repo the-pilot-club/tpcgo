@@ -1,6 +1,9 @@
 package tpcgo
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"github.com/bwmarrin/discordgo"
+)
 
 type NewSuggestion struct {
 	StatusID  int    `json:"statusId"`
@@ -31,6 +34,22 @@ type QuizQuestion struct {
 	IsOld             bool   `json:"isOld,omitempty"`
 	CreatedAt         string `json:"createdAt,omitempty"`
 	UpdatedAt         string `json:"updatedAt,omitempty"`
+}
+
+type QuizQuestionForResponse struct {
+	MessageID  string `json:"messageId,omitempty"`
+	QuestionID string `json:"questionId,omitempty"`
+}
+
+type QuizUserResponseSet struct {
+	MessageID string            `json:"messageId,omitempty"`
+	UserID    string            `json:"userId,omitempty"`
+	Answer    string            `json:"answer,omitempty"`
+	User      *discordgo.Member `json:"user,omitempty"`
+}
+
+type QuizUserResponse struct {
+	User *discordgo.Member `json:"user,omitempty"`
 }
 
 func (s *Session) GetAllSuggestions() (su []*Suggestions, e error) {
@@ -172,4 +191,71 @@ func (s *Session) DeleteQuizQuestion(id string) (d *QuizQuestion, e error) {
 		return nil, err
 	}
 	return d, nil
+}
+
+func (s *Session) SetQuestionForResponse(messageID string, questionID string) (c bool, e error) {
+	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPIQuizSetQuestionForResponse, QuizQuestionForResponse{MessageID: messageID, QuestionID: questionID})
+	if err != nil {
+		return false, err
+	}
+	if data.StatusCode != 201 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func (s *Session) SetQuizUserResponse(i *QuizUserResponseSet) (c bool, e error) {
+	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPIQuizSetUserResponse, i)
+	if err != nil {
+		return false, err
+	}
+	if data.StatusCode != 201 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func (s *Session) DeleteQuizQuestionForResponse(id string) (d bool, e error) {
+	data, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPIQuizDeleteQuestionForResponse(id), "")
+	if err != nil {
+		return false, err
+	}
+	if data.StatusCode != 200 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func (s *Session) GetQuizUserResponses(id string, answer string) (r []*QuizUserResponse, e error) {
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIQuizGetResponses(id, answer), "")
+	if err != nil {
+		return nil, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&r)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+func (s *Session) ResetQuizUserResponses() (d bool, e error) {
+	data, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPIResetUserResponses, "")
+	if err != nil {
+		return false, err
+	}
+	if data.StatusCode != 200 {
+		return false, nil
+	}
+	return true, nil
+}
+func (s *Session) CheckUserQuizResponse(id string) (r bool, e error) {
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPICheckUserResponse(id), "")
+	if err != nil {
+		return false, err
+	}
+	err = json.NewDecoder(data.Body).Decode(&r)
+	if err != nil {
+		return false, err
+	}
+	return r, nil
 }
