@@ -13,7 +13,7 @@ var (
 			return ""
 		}
 	}
-	ENDPOINTCoreAPI    = "http://127.0.0.1:3000"
+	ENDPOINTCoreAPI    = "https://api.thepilotclub.org"
 	EndpointVATSIMAPI  = "https://api.vatsim.net/"
 	EndpointVATSIMData = "https://data.vatsim.net/"
 
