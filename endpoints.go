@@ -13,8 +13,7 @@ var (
 			return ""
 		}
 	}
-	ENDPOINTCoreAPI = "https://api.thepilotclub.org"
-	//ENDPOINTCoreAPI    = "http://127.0.0.1:3000"
+	ENDPOINTCoreAPI    = "https://api.thepilotclub.org"
 	EndpointVATSIMAPI  = "https://api.vatsim.net/"
 	EndpointVATSIMData = "https://data.vatsim.net/"
 
@@ -49,7 +48,7 @@ var (
 	ENDPOINTCoreAPISuggestion     = func(id string) string { return ENDPOINTCoreAPI + "/suggestions/" + id }
 
 	/*
-		VASTSIM API Endpoints
+		VATSIM API Endpoints
 	*/
 
 	EndpointVATSIMDataFeed  = EndpointVATSIMData + "v" + VATSIMDataFeedVersion + "/vatsim-data.json"

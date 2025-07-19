@@ -34,8 +34,8 @@ type Pilot struct {
 	Groundspeed    int         `json:"groundspeed,omitempty"`
 	Transponder    string      `json:"transponder,omitempty"`
 	Heading        int         `json:"heading,omitempty"`
-	QNH_I_Hg       float64     `json:"qnh_i_hg,omitempty"`
-	QNH_MB         int         `json:"qnh_mb,omitempty"`
+	QnhIHg         float64     `json:"qnh_i_hg,omitempty"`
+	QnhMb          int         `json:"qnh_mb,omitempty"`
 	FlightPlan     *FlightPlan `json:"flight_plan,omitempty"`
 	LogonTime      string      `json:"logon_time,omitempty"`
 	LastUpdated    string      `json:"last_updated,omitempty"`
@@ -117,8 +117,8 @@ type VATSIMUserHours struct {
 	ADM   float64 `json:"adm,omitempty"`
 }
 
-func (v *VATSIMSession) GetVatsimDataFeed() (df *DataFeed, err error) {
-	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMDataFeed, "")
+func (s *Session) GetVatsimDataFeed() (df *DataFeed, err error) {
+	data, err := s.sendVATSIMRequest("GET", EndpointVATSIMDataFeed, "")
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
 	}
@@ -129,8 +129,8 @@ func (v *VATSIMSession) GetVatsimDataFeed() (df *DataFeed, err error) {
 	return df, nil
 }
 
-func (v *VATSIMSession) GetUserDiscordID(UserID string) (m *MemberDiscord, err error) {
-	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMDiscordId(UserID), "")
+func (s *Session) GetUserDiscordID(UserID string) (m *MemberDiscord, err error) {
+	data, err := s.sendVATSIMRequest("GET", EndpointVATSIMDiscordId(UserID), "")
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
 	}
@@ -141,8 +141,8 @@ func (v *VATSIMSession) GetUserDiscordID(UserID string) (m *MemberDiscord, err e
 	return m, err
 }
 
-func (v *VATSIMSession) GetUserHours(UserID string) (m *VATSIMUserHours, err error) {
-	data, err := v.sendVATSIMRequest("GET", EndpointVATSIMUserHours(UserID), "")
+func (s *Session) GetUserHours(UserID string) (m *VATSIMUserHours, err error) {
+	data, err := s.sendVATSIMRequest("GET", EndpointVATSIMUserHours(UserID), "")
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
 	}

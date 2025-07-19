@@ -19,7 +19,7 @@ type Suggestions struct {
 	ActionUserID string `json:"actionUserId,omitempty"`
 }
 
-func (s *CoreAPISession) GetAllSuggestions() (su []*Suggestions, e error) {
+func (s *Session) GetAllSuggestions() (su []*Suggestions, e error) {
 	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIAllSuggestions, "")
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (s *CoreAPISession) GetAllSuggestions() (su []*Suggestions, e error) {
 	return su, nil
 }
 
-func (s *CoreAPISession) AddSuggestion(entry *NewSuggestion) (su *Suggestions, e error) {
+func (s *Session) AddSuggestion(entry *NewSuggestion) (su *Suggestions, e error) {
 	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPINewSuggestion, entry)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (s *CoreAPISession) AddSuggestion(entry *NewSuggestion) (su *Suggestions, e
 	return su, nil
 }
 
-func (s *CoreAPISession) GetSuggestion(id string) (su *Suggestions, e error) {
+func (s *Session) GetSuggestion(id string) (su *Suggestions, e error) {
 	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPISuggestion(id), "")
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *CoreAPISession) GetSuggestion(id string) (su *Suggestions, e error) {
 	return su, nil
 }
 
-func (s *CoreAPISession) UupdateSuggestion(id string, entry *Suggestions) (su *Suggestions, e error) {
+func (s *Session) UpdateSuggestion(id string, entry *Suggestions) (su *Suggestions, e error) {
 	data, err := s.sendCoreAPIRequest("PATCH", ENDPOINTCoreAPISuggestion(id), entry)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (s *CoreAPISession) UupdateSuggestion(id string, entry *Suggestions) (su *S
 	return su, nil
 }
 
-func (s *CoreAPISession) DeleteSuggestion(id string) (d bool, e error) {
+func (s *Session) DeleteSuggestion(id string) (d bool, e error) {
 	_, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPISuggestion(id), "")
 	if err != nil {
 		return false, err

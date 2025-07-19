@@ -1,5 +1,18 @@
 package tpcgo
 
+type Session struct {
+	FCPSession     *FCPSession
+	CoreAPISession *CoreAPISession
+	VATSIMSession  *VATSIMSession
+}
+
+type SessionConfig struct {
+	FCPKey       string
+	FCPEnv       string
+	VATSIMAPIKey string
+	CoreApiKey   string
+}
+
 type FCPSession struct {
 	ApiKeyHeader string
 	ApiKey       string
