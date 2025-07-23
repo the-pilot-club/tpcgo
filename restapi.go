@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// all errors that are present in the package
 var (
 	ErrJSONUnmarshal   = errors.New("json unmarshal")
 	ErrNoKeyError      = errors.New("no api key found")
@@ -18,7 +19,7 @@ var (
 	ErrAlreadyReported = errors.New("already reported")
 )
 
-func (v *VATSIMSession) sendVATSIMRequest(method, url string, body interface{}) (*http.Response, error) {
+func (s *Session) sendVATSIMRequest(method, url string, body interface{}) (*http.Response, error) {
 	var bodyReader io.Reader
 	if body != nil {
 		jsonData, err := json.Marshal(body)
@@ -36,9 +37,9 @@ func (v *VATSIMSession) sendVATSIMRequest(method, url string, body interface{}) 
 	// Set headers
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", v.UserAgent)
-	if v.ApiKey != "" {
-		req.Header.Set(v.ApiKeyHeader, v.ApiKey)
+	req.Header.Set("User-Agent", s.CoreAPISession.UserAgent)
+	if s.CoreAPISession.ApiKey != "" {
+		req.Header.Set(s.CoreAPISession.ApiKeyHeader, s.CoreAPISession.ApiKey)
 	}
 
 	client := &http.Client{}
@@ -54,7 +55,7 @@ func (v *VATSIMSession) sendVATSIMRequest(method, url string, body interface{}) 
 	return resp, nil
 }
 
-func (s FCPSession) sendFCPRequest(method, url string, body interface{}) (*http.Response, error) {
+func (s *Session) sendFCPRequest(method, url string, body interface{}) (*http.Response, error) {
 	var bodyReader io.Reader
 	if body != nil {
 		jsonData, err := json.Marshal(body)
@@ -72,9 +73,9 @@ func (s FCPSession) sendFCPRequest(method, url string, body interface{}) (*http.
 	// Set headers
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", s.UserAgent)
-	if s.ApiKey != "" {
-		req.Header.Set(s.ApiKeyHeader, s.ApiKey)
+	req.Header.Set("User-Agent", s.FCPSession.UserAgent)
+	if s.FCPSession.ApiKey != "" {
+		req.Header.Set(s.FCPSession.ApiKeyHeader, s.FCPSession.ApiKey)
 	}
 
 	client := &http.Client{}
@@ -103,7 +104,7 @@ func (s FCPSession) sendFCPRequest(method, url string, body interface{}) (*http.
 	return resp, nil
 }
 
-func (s CoreAPISession) sendCoreAPIRequest(method, url string, body interface{}) (*http.Response, error) {
+func (s *Session) sendCoreAPIRequest(method, url string, body interface{}) (*http.Response, error) {
 	var bodyReader io.Reader
 	if body != nil {
 		jsonData, err := json.Marshal(body)
@@ -123,9 +124,9 @@ func (s CoreAPISession) sendCoreAPIRequest(method, url string, body interface{})
 		req.Header.Set("Content-Type", "application/json")
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", s.UserAgent)
-	if s.ApiKey != "" {
-		req.Header.Set(s.ApiKeyHeader, s.ApiKey)
+	req.Header.Set("User-Agent", s.CoreAPISession.UserAgent)
+	if s.CoreAPISession.ApiKey != "" {
+		req.Header.Set(s.CoreAPISession.ApiKeyHeader, s.CoreAPISession.ApiKey)
 	}
 
 	client := &http.Client{}

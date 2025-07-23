@@ -1,31 +1,25 @@
 package tpcgo
 
-const VERSION = "0.0.5"
+const VERSION = "0.0.7"
 
-func NewFCPSession(ApiKey string, Env string) (f *FCPSession, e error) {
-	f = &FCPSession{
-		ApiKeyHeader: "Authorization",
-		ApiKey:       ApiKey,
-		UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
-		Environment:  Env,
-	}
-	return
-}
-
-func NewVATSIMSession(ApiKey string) (v *VATSIMSession, e error) {
-	v = &VATSIMSession{
-		ApiKeyHeader: "X-API-KEY",
-		ApiKey:       ApiKey,
-		UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
-	}
-	return
-}
-
-func NewCoreAPISession(ApiKey string) (c *CoreAPISession, e error) {
-	c = &CoreAPISession{
-		ApiKeyHeader: "X-API-KEY",
-		ApiKey:       ApiKey,
-		UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
+func NewSession(config SessionConfig) (s *Session, e error) {
+	s = &Session{
+		FCPSession: &FCPSession{
+			ApiKeyHeader: "Authorization",
+			ApiKey:       config.FCPKey,
+			UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
+			Environment:  config.FCPEnv,
+		},
+		VATSIMSession: &VATSIMSession{
+			ApiKeyHeader: "X-API-KEY",
+			ApiKey:       config.VATSIMAPIKey,
+			UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
+		},
+		CoreAPISession: &CoreAPISession{
+			ApiKeyHeader: "X-API-KEY",
+			ApiKey:       config.CoreApiKey,
+			UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
+		},
 	}
 	return
 }
