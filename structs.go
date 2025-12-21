@@ -138,7 +138,7 @@ type FCPLimitedUser struct {
 }
 
 type FCPCIDOnly struct {
-	VATSIMCid int `json:"vatsimCid,omitempty"`
+	VATSIMCid int `json:"vatsim_cid,omitempty"`
 }
 
 type FCPUserAdd struct {
