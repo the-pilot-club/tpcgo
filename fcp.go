@@ -30,6 +30,18 @@ func (s *Session) GetAllFCPUsers() (u []*FCPLimitedUser, e error) {
 	return u, nil
 }
 
+func (s *Session) GetAllFCPUsersCID() (u []*FCPCIDOnly, e error) {
+	data, err := s.sendFCPRequest("GET", ENDPOINTFCPGetAllUsersCID(s.FCPSession.Environment), "")
+	if err != nil {
+		return nil, fmt.Errorf("%s", err)
+	}
+	err = json.NewDecoder(data.Body).Decode(&u)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
 func (s *Session) GetFCPUser(UserId string) (u *FCPLimitedUser, e error) {
 	data, err := s.sendFCPRequest("GET", ENDPOINTFCPUser(UserId, s.FCPSession.Environment), "")
 	if err != nil {

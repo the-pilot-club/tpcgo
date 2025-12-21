@@ -27,12 +27,13 @@ var (
 		FCP API  User Endpoints
 	*/
 
-	ENDPOINTFCPGetAllUsers   = func(env string) string { return EndpointFCP(env) + "/users/get" }
-	ENDPOINTFCPUser          = func(userId string, env string) string { return EndpointFCP(env) + "/users/find/" + userId }
-	ENDPOINTFCPUserBirthdays = func(env string) string { return EndpointFCP(env) + "/users/birthdays" }
-	ENDPOINTFCPUserAdd       = func(env string) string { return EndpointFCP(env) + "/users/new" }
-	ENDPOINTFCPUserDelete    = func(userId string, env string) string { return EndpointFCP(env) + "/users/find/" + userId + "/delete" }
-	ENDPOINTFCPUserCallsign  = func(userId string, env string) string {
+	ENDPOINTFCPGetAllUsers    = func(env string) string { return EndpointFCP(env) + "/users/get" }
+	ENDPOINTFCPGetAllUsersCID = func(env string) string { return EndpointFCP(env) + "/users/get/cid" }
+	ENDPOINTFCPUser           = func(userId string, env string) string { return EndpointFCP(env) + "/users/find/" + userId }
+	ENDPOINTFCPUserBirthdays  = func(env string) string { return EndpointFCP(env) + "/users/birthdays" }
+	ENDPOINTFCPUserAdd        = func(env string) string { return EndpointFCP(env) + "/users/new" }
+	ENDPOINTFCPUserDelete     = func(userId string, env string) string { return EndpointFCP(env) + "/users/find/" + userId + "/delete" }
+	ENDPOINTFCPUserCallsign   = func(userId string, env string) string {
 		return EndpointFCP(env) + "/users/find/" + userId + "/callsign"
 	}
 	ENDPOINTFCPUserAuditLogAdd = func(userId string, env string) string {

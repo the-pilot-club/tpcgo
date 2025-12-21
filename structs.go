@@ -137,6 +137,10 @@ type FCPLimitedUser struct {
 	AircraftHangar []FCPUserAircraft `json:"aircraftHangar,omitempty"`
 }
 
+type FCPCIDOnly struct {
+	VATSIMCid int `json:"vatsimCid,omitempty"`
+}
+
 type FCPUserAdd struct {
 	UserID string `json:"id"`
 }
