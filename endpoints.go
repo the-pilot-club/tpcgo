@@ -1,5 +1,13 @@
 package tpcgo
 
+// Environment identifies which deployment of a service to target (e.g. production, beta).
+type Environment string
+
+const (
+	EnvProduction Environment = "production"
+	EnvBeta       Environment = "beta"
+)
+
 var (
 	VATSIMDataFeedVersion = "3"
 	VATSIMAPIVersion      = "2"
@@ -13,7 +21,15 @@ var (
 			return ""
 		}
 	}
-	ENDPOINTCoreAPI    = "https://api.thepilotclub.org"
+
+	coreAPIBaseURLs = map[Environment]string{
+		EnvProduction: "https://api.thepilotclub.org",
+		EnvBeta:       "https://api-beta.thepilotclub.org",
+	}
+	EndpointCoreAPI = func(env Environment) string {
+		return coreAPIBaseURLs[env]
+	}
+
 	EndpointVATSIMAPI  = "https://api.vatsim.net/"
 	EndpointVATSIMData = "https://data.vatsim.net/"
 
@@ -44,22 +60,24 @@ var (
 		CORE API Endpoints
 	*/
 
-	ENDPOINTCoreAPIAllSuggestions                = ENDPOINTCoreAPI + "/suggestions/all"
-	ENDPOINTCoreAPINewSuggestion                 = ENDPOINTCoreAPI + "/suggestions/new"
-	ENDPOINTCoreAPISuggestion                    = func(id string) string { return ENDPOINTCoreAPI + "/suggestions/" + id }
-	ENDPOINTCoreAPIAllQuizQuestions              = ENDPOINTCoreAPI + "/quiz/all"
-	ENDPOINTCoreAPINewQuizQuestion               = ENDPOINTCoreAPI + "/quiz/new"
-	ENDPOINTCoreAPINextQuizQuestion              = ENDPOINTCoreAPI + "/quiz/next"
-	ENDPOINTCoreAPICurrentQuizQuestion           = ENDPOINTCoreAPI + "/quiz/current"
-	EndPointCoreAPIQuizQuestionByID              = func(id string) string { return ENDPOINTCoreAPI + "/quiz/" + id }
-	ENDPOINTCoreAPIQuizSetQuestionForResponse    = ENDPOINTCoreAPI + "/quiz/responses/question/set"
-	ENDPOINTCoreAPIQuizSetUserResponse           = ENDPOINTCoreAPI + "/quiz/responses/user/record"
-	ENDPOINTCoreAPIQuizDeleteQuestionForResponse = func(id string) string { return ENDPOINTCoreAPI + "/quiz/responses/question/" + id }
-	ENDPOINTCoreAPIQuizGetResponses              = func(id string, answer string) string {
-		return ENDPOINTCoreAPI + "/quiz/responses/user/responses/" + id + "?answer=" + answer
+	ENDPOINTCoreAPIAllSuggestions                = func(env Environment) string { return EndpointCoreAPI(env) + "/suggestions/all" }
+	ENDPOINTCoreAPINewSuggestion                 = func(env Environment) string { return EndpointCoreAPI(env) + "/suggestions/new" }
+	ENDPOINTCoreAPISuggestion                    = func(id string, env Environment) string { return EndpointCoreAPI(env) + "/suggestions/" + id }
+	ENDPOINTCoreAPIAllQuizQuestions              = func(env Environment) string { return EndpointCoreAPI(env) + "/quiz/all" }
+	ENDPOINTCoreAPINewQuizQuestion               = func(env Environment) string { return EndpointCoreAPI(env) + "/quiz/new" }
+	ENDPOINTCoreAPINextQuizQuestion              = func(env Environment) string { return EndpointCoreAPI(env) + "/quiz/next" }
+	ENDPOINTCoreAPICurrentQuizQuestion           = func(env Environment) string { return EndpointCoreAPI(env) + "/quiz/current" }
+	EndPointCoreAPIQuizQuestionByID              = func(id string, env Environment) string { return EndpointCoreAPI(env) + "/quiz/" + id }
+	ENDPOINTCoreAPIQuizSetQuestionForResponse    = func(env Environment) string { return EndpointCoreAPI(env) + "/quiz/responses/question/set" }
+	ENDPOINTCoreAPIQuizSetUserResponse           = func(env Environment) string { return EndpointCoreAPI(env) + "/quiz/responses/user/record" }
+	ENDPOINTCoreAPIQuizDeleteQuestionForResponse = func(id string, env Environment) string {
+		return EndpointCoreAPI(env) + "/quiz/responses/question/" + id
 	}
-	ENDPOINTCoreAPIResetUserResponses = ENDPOINTCoreAPI + "/quiz/responses/user/responses"
-	ENDPOINTCoreAPICheckUserResponse  = func(id string) string { return ENDPOINTCoreAPI + "/quiz/responses/user/check/" + id }
+	ENDPOINTCoreAPIQuizGetResponses = func(id string, answer string, env Environment) string {
+		return EndpointCoreAPI(env) + "/quiz/responses/user/responses/" + id + "?answer=" + answer
+	}
+	ENDPOINTCoreAPIResetUserResponses = func(env Environment) string { return EndpointCoreAPI(env) + "/quiz/responses/user/responses" }
+	ENDPOINTCoreAPICheckUserResponse  = func(id string, env Environment) string { return EndpointCoreAPI(env) + "/quiz/responses/user/check/" + id }
 
 	/*
 		VATSIM API Endpoints

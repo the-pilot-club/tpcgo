@@ -6,7 +6,7 @@ import (
 
 // GetAllSuggestions fetches all suggestions from the TPC Core API.
 func (s *Session) GetAllSuggestions() (su []*Suggestions, e error) {
-	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIAllSuggestions, "")
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIAllSuggestions(s.CoreAPISession.Environment), "")
 	if err != nil {
 		return nil, err
 	}
@@ -19,7 +19,7 @@ func (s *Session) GetAllSuggestions() (su []*Suggestions, e error) {
 
 // AddSuggestion creates a new suggestion in the TPC Core API.
 func (s *Session) AddSuggestion(entry *NewSuggestion) (su *Suggestions, e error) {
-	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPINewSuggestion, entry)
+	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPINewSuggestion(s.CoreAPISession.Environment), entry)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func (s *Session) AddSuggestion(entry *NewSuggestion) (su *Suggestions, e error)
 
 // GetSuggestion fetches a single suggestion by ID from the TPC Core API.
 func (s *Session) GetSuggestion(id string) (su *Suggestions, e error) {
-	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPISuggestion(id), "")
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPISuggestion(id, s.CoreAPISession.Environment), "")
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (s *Session) GetSuggestion(id string) (su *Suggestions, e error) {
 
 // UpdateSuggestion updates an existing suggestion by ID in the TPC Core API.
 func (s *Session) UpdateSuggestion(id string, entry *Suggestions) (su *Suggestions, e error) {
-	data, err := s.sendCoreAPIRequest("PATCH", ENDPOINTCoreAPISuggestion(id), entry)
+	data, err := s.sendCoreAPIRequest("PATCH", ENDPOINTCoreAPISuggestion(id, s.CoreAPISession.Environment), entry)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (s *Session) UpdateSuggestion(id string, entry *Suggestions) (su *Suggestio
 
 // DeleteSuggestion deletes a suggestion by ID in the TPC Core API.
 func (s *Session) DeleteSuggestion(id string) (d bool, e error) {
-	_, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPISuggestion(id), "")
+	_, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPISuggestion(id, s.CoreAPISession.Environment), "")
 	if err != nil {
 		return false, err
 	}
@@ -68,7 +68,7 @@ func (s *Session) DeleteSuggestion(id string) (d bool, e error) {
 
 // GetAllQuizQuestions fetches all quiz questions from the TPC Core API.
 func (s *Session) GetAllQuizQuestions() (su []*QuizQuestion, e error) {
-	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIAllQuizQuestions, "")
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIAllQuizQuestions(s.CoreAPISession.Environment), "")
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (s *Session) GetAllQuizQuestions() (su []*QuizQuestion, e error) {
 
 // GetCurrentQuizQuestions fetches the current quiz question from the TPC Core API.
 func (s *Session) GetCurrentQuizQuestions() (q *QuizQuestion, e error) {
-	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPICurrentQuizQuestion, "")
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPICurrentQuizQuestion(s.CoreAPISession.Environment), "")
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (s *Session) GetCurrentQuizQuestions() (q *QuizQuestion, e error) {
 
 // GetQuizQuestionByID fetches a quiz question by ID from the TPC Core API.
 func (s *Session) GetQuizQuestionByID(id string) (q *QuizQuestion, e error) {
-	data, err := s.sendCoreAPIRequest("GET", EndPointCoreAPIQuizQuestionByID(id), "")
+	data, err := s.sendCoreAPIRequest("GET", EndPointCoreAPIQuizQuestionByID(id, s.CoreAPISession.Environment), "")
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func (s *Session) GetQuizQuestionByID(id string) (q *QuizQuestion, e error) {
 
 // GetNextQuizQuestion fetches the next quiz question from the TPC Core API.
 func (s *Session) GetNextQuizQuestion() (q *QuizQuestion, e error) {
-	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPINextQuizQuestion, "")
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPINextQuizQuestion(s.CoreAPISession.Environment), "")
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func (s *Session) GetNextQuizQuestion() (q *QuizQuestion, e error) {
 
 // AddNewQuizQuestion creates a new quiz question in the TPC Core API.
 func (s *Session) AddNewQuizQuestion(i QuizQuestion) (q *QuizQuestion, e error) {
-	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPINewQuizQuestion, i)
+	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPINewQuizQuestion(s.CoreAPISession.Environment), i)
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +133,7 @@ func (s *Session) AddNewQuizQuestion(i QuizQuestion) (q *QuizQuestion, e error) 
 
 // UpdateQuizQuestion updates an existing quiz question by ID in the TPC Core API.
 func (s *Session) UpdateQuizQuestion(id string, i QuizQuestion) (q *QuizQuestion, e error) {
-	data, err := s.sendCoreAPIRequest("PUT", EndPointCoreAPIQuizQuestionByID(id), i)
+	data, err := s.sendCoreAPIRequest("PUT", EndPointCoreAPIQuizQuestionByID(id, s.CoreAPISession.Environment), i)
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +146,7 @@ func (s *Session) UpdateQuizQuestion(id string, i QuizQuestion) (q *QuizQuestion
 
 // DeleteQuizQuestion removes a quiz question by ID in the TPC Core API.
 func (s *Session) DeleteQuizQuestion(id string) (d *QuizQuestion, e error) {
-	data, err := s.sendCoreAPIRequest("DELETE", EndPointCoreAPIQuizQuestionByID(id), "")
+	data, err := s.sendCoreAPIRequest("DELETE", EndPointCoreAPIQuizQuestionByID(id, s.CoreAPISession.Environment), "")
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +159,7 @@ func (s *Session) DeleteQuizQuestion(id string) (d *QuizQuestion, e error) {
 
 // SetQuestionForResponse records which quiz question is associated with a given message ID for collecting responses.
 func (s *Session) SetQuestionForResponse(messageID string, questionID string) (c bool, e error) {
-	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPIQuizSetQuestionForResponse, QuizQuestionForResponse{MessageID: messageID, QuestionID: questionID})
+	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPIQuizSetQuestionForResponse(s.CoreAPISession.Environment), QuizQuestionForResponse{MessageID: messageID, QuestionID: questionID})
 	if err != nil {
 		return false, err
 	}
@@ -171,7 +171,7 @@ func (s *Session) SetQuestionForResponse(messageID string, questionID string) (c
 
 // SetQuizUserResponse records a user's answer for the currently tracked quiz question.
 func (s *Session) SetQuizUserResponse(i *QuizUserResponseSet) (c bool, e error) {
-	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPIQuizSetUserResponse, i)
+	data, err := s.sendCoreAPIRequest("POST", ENDPOINTCoreAPIQuizSetUserResponse(s.CoreAPISession.Environment), i)
 	if err != nil {
 		return false, err
 	}
@@ -183,7 +183,7 @@ func (s *Session) SetQuizUserResponse(i *QuizUserResponseSet) (c bool, e error) 
 
 // DeleteQuizQuestionForResponse removes the question-to-message association used for collecting quiz responses.
 func (s *Session) DeleteQuizQuestionForResponse(id string) (d bool, e error) {
-	data, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPIQuizDeleteQuestionForResponse(id), "")
+	data, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPIQuizDeleteQuestionForResponse(id, s.CoreAPISession.Environment), "")
 	if err != nil {
 		return false, err
 	}
@@ -195,7 +195,7 @@ func (s *Session) DeleteQuizQuestionForResponse(id string) (d bool, e error) {
 
 // GetQuizUserResponses fetches quiz responses for a given question/message identifier, optionally filtered by answer.
 func (s *Session) GetQuizUserResponses(id string, answer string) (r []*QuizUserResponse, e error) {
-	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIQuizGetResponses(id, answer), "")
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPIQuizGetResponses(id, answer, s.CoreAPISession.Environment), "")
 	if err != nil {
 		return nil, err
 	}
@@ -208,7 +208,7 @@ func (s *Session) GetQuizUserResponses(id string, answer string) (r []*QuizUserR
 
 // ResetQuizUserResponses clears all recorded quiz user responses.
 func (s *Session) ResetQuizUserResponses() (d bool, e error) {
-	data, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPIResetUserResponses, "")
+	data, err := s.sendCoreAPIRequest("DELETE", ENDPOINTCoreAPIResetUserResponses(s.CoreAPISession.Environment), "")
 	if err != nil {
 		return false, err
 	}
@@ -220,7 +220,7 @@ func (s *Session) ResetQuizUserResponses() (d bool, e error) {
 
 // CheckUserQuizResponse checks whether a user (by ID) has already recorded a quiz response.
 func (s *Session) CheckUserQuizResponse(id string) (r bool, e error) {
-	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPICheckUserResponse(id), "")
+	data, err := s.sendCoreAPIRequest("GET", ENDPOINTCoreAPICheckUserResponse(id, s.CoreAPISession.Environment), "")
 	if err != nil {
 		return false, err
 	}

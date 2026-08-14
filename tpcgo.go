@@ -1,6 +1,6 @@
 package tpcgo
 
-const VERSION = "0.0.7"
+const VERSION = "0.0.8"
 
 // NewSession creates a new session that can be used anywhere in the project assuming you put it in the root of the directory.
 func NewSession(config SessionConfig) (s *Session, e error) {
@@ -20,6 +20,7 @@ func NewSession(config SessionConfig) (s *Session, e error) {
 			ApiKeyHeader: "X-API-KEY",
 			ApiKey:       config.CoreApiKey,
 			UserAgent:    "TPCGO (https://github.com/the-pilot-club/tpcgo, v" + VERSION + ")",
+			Environment:  config.CoreAPIEnv,
 		},
 	}
 	return
