@@ -24,7 +24,7 @@ var (
 
 	coreAPIBaseURLs = map[Environment]string{
 		EnvProduction: "https://api.thepilotclub.org",
-		EnvBeta:       "https://api-beta.thepilotclub.org",
+		EnvBeta:       "https://api.ejsteiner.com",
 	}
 	EndpointCoreAPI = func(env Environment) string {
 		return coreAPIBaseURLs[env]
@@ -77,7 +77,9 @@ var (
 		return EndpointCoreAPI(env) + "/quiz/responses/user/responses/" + id + "?answer=" + answer
 	}
 	ENDPOINTCoreAPIResetUserResponses = func(env Environment) string { return EndpointCoreAPI(env) + "/quiz/responses/user/responses" }
-	ENDPOINTCoreAPICheckUserResponse  = func(id string, env Environment) string { return EndpointCoreAPI(env) + "/quiz/responses/user/check/" + id }
+	ENDPOINTCoreAPICheckUserResponse  = func(id string, env Environment) string {
+		return EndpointCoreAPI(env) + "/quiz/responses/user/check/" + id
+	}
 
 	/*
 		VATSIM API Endpoints
