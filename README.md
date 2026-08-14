@@ -100,6 +100,11 @@ Suggested approaches:
 
 This project follows Go module versioning. Please pin to a release/tag in production usage.
 
+Releases are automated: a GitHub Actions workflow (`.github/workflows/release.yml`) tags
+and publishes a GitHub Release whenever the `VERSION` const in `tpcgo.go` is bumped and
+merged to `main`. To cut a release, bump `VERSION` in `tpcgo.go` as part of your PR;
+merging to `main` pushes the matching `vX.Y.Z` tag automatically.
+
 ## Contributing
 
 Issues and PRs are welcome. Keep changes focused and include tests where possible.
