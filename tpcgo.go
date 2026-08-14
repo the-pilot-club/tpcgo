@@ -4,6 +4,9 @@ const VERSION = "0.0.8"
 
 // NewSession creates a new session that can be used anywhere in the project assuming you put it in the root of the directory.
 func NewSession(config SessionConfig) (s *Session, e error) {
+	if config.CoreAPIEnv == "" {
+		config.CoreAPIEnv = EnvProduction
+	}
 	s = &Session{
 		FCPSession: &FCPSession{
 			ApiKeyHeader: "Authorization",
