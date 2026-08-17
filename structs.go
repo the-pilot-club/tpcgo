@@ -13,6 +13,7 @@ type SessionConfig struct {
 	FCPEnv       string
 	VATSIMAPIKey string
 	CoreApiKey   string
+	CoreAPIEnv   Environment
 }
 
 type FCPSession struct {
@@ -26,6 +27,7 @@ type CoreAPISession struct {
 	ApiKeyHeader string
 	ApiKey       string
 	UserAgent    string
+	Environment  Environment
 }
 
 type VATSIMSession struct {

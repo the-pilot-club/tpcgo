@@ -1,0 +1,85 @@
+name: Tag and Release
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-tagging
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build and vet sanity gate
+        run: |
+          go build ./...
+          go vet ./...
+
+      - name: Extract VERSION from tpcgo.go
+        id: version
+        run: |
+          VERSION=$(sed -n 's/^const VERSION = "\(.*\)"/\1/p' tpcgo.go)
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not extract VERSION const from tpcgo.go"
+            exit 1
+          fi
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::VERSION '$VERSION' is not valid semver"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether tag already exists
+        id: check
+        run: |
+          EXISTING=$(git ls-remote --tags origin "refs/tags/${{ steps.version.outputs.tag }}")
+          if [ -n "$EXISTING" ]; then
+            echo "Tag ${{ steps.version.outputs.tag }} already exists — no-op."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create and push tag
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG"
+          git push origin "$TAG" || {
+            echo "Push rejected, checking if tag exists on remote (race)..."
+            git ls-remote --tags origin "refs/tags/$TAG" | grep -q . || exit 1
+          }
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --generate-notes
+
+      - name: Warm up Go module proxy (best-effort)
+        if: steps.check.outputs.skip == 'false'
+        continue-on-error: true
+        run: |
+          curl -sf "https://proxy.golang.org/github.com/the-pilot-club/tpcgo/@v/${{ steps.version.outputs.tag }}.info" || true
+          curl -sf "https://sum.golang.org/lookup/github.com/the-pilot-club/tpcgo@${{ steps.version.outputs.tag }}" || true
